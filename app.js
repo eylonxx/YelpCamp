@@ -28,8 +28,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
 
-app.use('/campgrounds', campgrounds)
-app.use('/campgrounds/:id/reviews', reviews)
+app.use('/campgrounds', campgrounds) //router
+app.use('/campgrounds/:id/reviews', reviews) //router
 
 
 app.all('*', (req, res, next) => { // moves to app.use a new error (passed to next)
