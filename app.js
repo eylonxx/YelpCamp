@@ -13,8 +13,9 @@ const Campground = require('./models/campgrounds');
 const Review = require('./models/review');
 const User = require('./models/user');
 
-const campgrounds = require('./routes/campgrounds');
-const reviews = require('./routes/reviews');
+const usersRoutes = require('./routes/users');
+const campgroundsRoutes = require('./routes/campgrounds');
+const reviewsRoutes = require('./routes/reviews');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp');
 const db = mongoose.connection;
@@ -57,8 +58,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/campgrounds', campgrounds); //router
-app.use('/campgrounds/:id/reviews', reviews); //router
+app.use('/campgrounds', campgroundsRoutes); //router
+app.use('/campgrounds/:id/reviews', reviewsRoutes); //router
+app.use('/', usersRoutes); //router
 
 app.all('*', (req, res, next) => {
   // moves to app.use a new error (passed to next)
