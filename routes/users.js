@@ -15,6 +15,9 @@ router.post(
       const { username, email, password } = req.body;
       const user = new User({ email, username });
       const registeredUser = await User.register(user, password); //passportjs
+      req.login(registeredUser, (err) => {
+        if (err) return next(err); //if theres a problem just return to err to next (for error handler)
+      });
       req.flash('success', 'Welcome to Yelp Camp!');
       res.redirect('/campgrounds');
     } catch (e) {
@@ -41,5 +44,11 @@ router.post(
     res.redirect('/campgrounds');
   }
 );
+
+router.get('/logout', (req, res) => {
+  req.logout();
+  req.flash('success', 'Successfuly logged you out!');
+  res.redirect('/campgrounds');
+});
 
 module.exports = router;
