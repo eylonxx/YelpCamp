@@ -41,7 +41,9 @@ router.post(
     //local=regular, could use google login or fb login
     //passport.authenticate > works like bcrypt compare
     req.flash('success', 'Welcome back!');
-    res.redirect('/campgrounds');
+    const redirectUrl = req.session.returnTo || '/campgrounds';
+    res.redirect(redirectUrl);
+    delete req.session.returnTo;
   }
 );
 
