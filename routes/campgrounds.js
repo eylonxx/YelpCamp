@@ -25,9 +25,10 @@ router
   .route('/:id')
   .get(catchAsync(campgrounds.showCampground))
   .put(
-    validateCampground,
     isLoggedIn,
     isAuthor,
+    upload.array('image'), //multer middleware
+    validateCampground,
     catchAsync(campgrounds.updateCampground)
   )
   .delete(isAuthor, catchAsync(campgrounds.deleteCampground));
