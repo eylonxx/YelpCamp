@@ -10,9 +10,11 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.createCampground = async (req, res, next) => {
-  // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
-
   const campground = new Campground(req.body.campground);
+  campground.images = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  })); //array of path and name
   campground.author = req.user._id; //.author is an id (obj id -> user id) so i can use req.user (from passport) to get that
   await campground.save();
   req.flash('success', 'Succesfuly made a new campground!');

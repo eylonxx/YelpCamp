@@ -1,3 +1,8 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+  //console.log(process.env.SECRET) access stuff on env file
+}
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
