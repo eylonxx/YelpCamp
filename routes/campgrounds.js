@@ -10,15 +10,12 @@ const catchAsync = require('../utils/catchAsync');
 
 const campgrounds = require('../controllers/campgrounds'); //controller functions, access as campground.xxx
 
-router
-  .route('/')
-  .get(catchAsync(campgrounds.index))
-  .post(
-    isLoggedIn,
-    upload.array('image'),
-    validateCampground,
-    catchAsync(campgrounds.createCampground)
-  );
+router.route('/').get(catchAsync(campgrounds.index)).post(
+  isLoggedIn,
+  upload.array('image'), //multer middleware
+  validateCampground,
+  catchAsync(campgrounds.createCampground)
+);
 //image from form, name=image
 //upload.single allows us to view req.file for info about file uploaded
 
