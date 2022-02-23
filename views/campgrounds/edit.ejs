@@ -16,10 +16,6 @@
         <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
-        <label class="form-label" for="image">Add Images</label>
-        <input type="file" name="image" id="" multiple>
-      </div>
-      <div class="mb-3">
         <label class="form-label" for="price">Campground Price</label>
         <div class="input-group">
           <span class="input-group-text" id="price-label">$</span>
@@ -31,6 +27,24 @@
         <label class="form-label" for="description">Description </label>
         <textarea class="form-control" type="text" id="description" name="campground[description]" required><%= campground.description %></textarea>
         <div class="valid-feedback">Looks good!</div>
+      </div>
+      <div class="mb-3">
+        <label for="image" class="form-label">Add More Images</label>
+        <input class="form-control" name="image" type="file" id="image" multiple>
+      </div>
+      <h5> Delete Images </h5>
+      <div class="row row-cols-1 row-cols-md-4 g-4 mb-3">
+        <% campground.images.forEach((image, i) => { %>
+        <div class="col">
+          <div class="card">
+            <img class="card-img" src="<%= image.thumbnail %>" alt="">
+            <div class="card-img-overlay text-end pt-1 pe-2">
+              <label class="visually-hidden" for="image-<%= i %>">Delete Image</label>
+              <input class="form-check-input" type="checkbox" name="deleteImages[]" value="<%= image.filename %>" id="image-<%= i %>">
+            </div>
+          </div>
+        </div>
+        <% }) %>
       </div>
       <div class="mb-3">
         <button class="btn btn-info">Save Campground</button>
