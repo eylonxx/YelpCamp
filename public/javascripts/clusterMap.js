@@ -29,8 +29,8 @@ map.on('load', () => {
       //   * Blue, 20px circles when point count is less than 100
       //   * Yellow, 30px circles when point count is between 100 and 750
       //   * Pink, 40px circles when point count is greater than or equal to 750
-      'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 100, '#f1f075', 750, '#f28cb1'],
-      'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
+      'circle-color': ['step', ['get', 'point_count'], '#00BCD4', 10, '#2196F3', 30, '#3F51B5'],
+      'circle-radius': ['step', ['get', 'point_count'], 15, 10, 20, 30, 35],
     },
   });
 
@@ -81,9 +81,7 @@ map.on('load', () => {
   // description HTML from its properties.
   map.on('click', 'unclustered-point', (e) => {
     const coordinates = e.features[0].geometry.coordinates.slice();
-    const mag = e.features[0].properties.mag;
-    const tsunami = e.features[0].properties.tsunami === 1 ? 'yes' : 'no';
-
+    const text = e.features[0].properties.popUpMarkup;
     // Ensure that if the map is zoomed out such that
     // multiple copies of the feature are visible, the
     // popup appears over the copy being pointed to.
@@ -91,10 +89,7 @@ map.on('load', () => {
       coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
     }
 
-    new mapboxgl.Popup()
-      .setLngLat(coordinates)
-      .setHTML(`magnitude: ${mag}<br>Was there a tsunami?: ${tsunami}`)
-      .addTo(map);
+    new mapboxgl.Popup().setLngLat(coordinates).setHTML(text).addTo(map);
   });
 
   map.on('mouseenter', 'clusters', () => {
