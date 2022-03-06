@@ -13,6 +13,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const Campground = require('./models/campgrounds');
 const Review = require('./models/review');
@@ -37,12 +38,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(mongoSanitize());
+
 const sessionConfig = {
+  name: 'session', //so it doesnt show up as 'connection.sid' and is easily targeted, not hidden but not default
   secret: 'thisshouldbeabettersecret!',
   resave: false,
   saveUninitialized: true,
   cookie: {
-    httpOnly: true,
+    httpOnly: true, //makes it so cookies are available through http (Reqs) only and not through js, so it cant be injected and used
+    // secure: true, //<--- httpS, only available on httpsecure, localhost doesnt work on https so its commented until deployment
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //7days
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
