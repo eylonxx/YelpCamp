@@ -15,6 +15,7 @@ const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const MongoDBStore = require('connect-mongo')(session);
 
 const Campground = require('./models/campgrounds');
 const Review = require('./models/review');
@@ -23,8 +24,10 @@ const User = require('./models/user');
 const usersRoutes = require('./routes/users');
 const campgroundsRoutes = require('./routes/campgrounds');
 const reviewsRoutes = require('./routes/reviews');
+const { MongoStore } = require('connect-mongo');
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp');
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
+mongoose.connect(dbUrl);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
@@ -93,10 +96,16 @@ app.use(
   })
 );
 
+const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 //
+const store = new MongoDBStore({ url: dbUrl, secret, touchAfter: 24 * 60 * 60 });
+store.on('error', function (e) {
+  console.log('sesssion store error', e);
+});
 const sessionConfig = {
+  store,
   name: 'session', //so it doesnt show up as 'connection.sid' and is easily targeted, not hidden but not default
-  secret: 'thisshouldbeabettersecret!',
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
